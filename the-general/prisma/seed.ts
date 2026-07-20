@@ -60,6 +60,43 @@ async function main() {
     });
     console.log("Seeded placeholder biography sections.");
   }
+
+  const achievementCount = await prisma.achievement.count();
+  if (achievementCount === 0) {
+    await prisma.achievement.createMany({
+      data: [
+        {
+          title: "[Placeholder] Graduated with honors",
+          description:
+            "Replace with a real milestone — degree, certification, or big personal win.",
+          date: new Date("2018-05-15"),
+          orderIndex: 0,
+        },
+        {
+          title: "[Placeholder] Landed the dream role",
+          description:
+            "Replace with the career achievement worth celebrating — a promotion, a launch, a leap of faith that paid off.",
+          date: new Date("2021-03-01"),
+          orderIndex: 1,
+        },
+        {
+          title: "[Placeholder] Built something of her own",
+          description:
+            "Replace with a project, business, or creative work she's proud of.",
+          date: new Date("2023-09-10"),
+          orderIndex: 2,
+        },
+        {
+          title: "[Placeholder] A milestone worth celebrating",
+          description:
+            "One more placeholder slot — a trip, a personal victory, whatever deserves a spot here.",
+          date: new Date("2025-01-20"),
+          orderIndex: 3,
+        },
+      ],
+    });
+    console.log("Seeded placeholder achievements.");
+  }
 }
 
 main()
