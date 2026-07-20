@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PageTransition } from "@/components/page-transition";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -45,6 +46,7 @@ export default async function RootLayout({
         <SiteHeader user={navUser} />
         <PageTransition>{children}</PageTransition>
         <SiteFooter />
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );
