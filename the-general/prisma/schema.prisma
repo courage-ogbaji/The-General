@@ -1,0 +1,109 @@
+// Prisma schema for The General birthday celebration app
+// learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  WISHER
+  CELEBRANT
+}
+
+enum WishType {
+  IMAGE
+  VIDEO
+  TEXT
+  MIXED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  hashedPassword  String?
+  displayName     String
+  profilePhotoUrl String?
+  bio             String?
+  role            Role     @default(WISHER)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  wishes Wish[]
+
+  @@index([role])
+}
+
+model Wish {
+  id        String   @id @default(cuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  type      WishType
+  mediaUrls String[] @default([])
+  caption   String?
+  seenAt    DateTime?
+  favorite  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+model BiographySection {
+  id         String   @id @default(cuid())
+  title      String
+  body       String
+  imageUrl   String?
+  orderIndex Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([orderIndex])
+}
+
+model Achievement {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  mediaUrl    String?
+  date        DateTime?
+  orderIndex  Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([orderIndex])
+}
+
+model GalleryItem {
+  id         String    @id @default(cuid())
+  mediaUrl   String
+  type       MediaType
+  caption    String?
+  date       DateTime?
+  orderIndex Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([orderIndex])
+}
+
+model GiftInfo {
+  id               String   @id @default(cuid())
+  bankAccountName  String?
+  bankAccountNumber String?
+  bankName         String?
+  cryptoWallets    Json?
+  deliveryAddress  String?
+  note             String?
+  updatedAt        DateTime @updatedAt
+}

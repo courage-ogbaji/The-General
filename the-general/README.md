@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The General
 
-## Getting Started
+A birthday celebration web app. Friends and loved ones ("wishers") create accounts, post photo/video/text wishes, and the celebrant gets a private dashboard to browse everything. The site also tells her story, showcases achievements, and hosts a private gift page.
 
-First, run the development server:
+## Tech stack
+
+- Next.js 16 (App Router, TypeScript, Turbopack)
+- PostgreSQL + Prisma ORM 7
+- NextAuth.js v5 (Auth.js) — credentials login, optional Google OAuth
+- Tailwind CSS v4 + shadcn/ui
+- Framer Motion for animation
+- Cloudinary for image/video uploads and delivery
+
+> **Next.js 16 note:** this project uses `proxy.ts` (not `middleware.ts`) for route protection, and dynamic `params`/`searchParams` are async — see the Next.js 16 upgrade guide in `node_modules/next/dist/docs` if something looks unfamiliar.
+
+## Getting started
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Set up environment variables
+
+Copy `.env.example` to `.env` and fill in the values:
+
+```bash
+cp .env.example .env
+```
+
+- `DATABASE_URL` — a PostgreSQL connection string.
+- `AUTH_SECRET` — generate with `npx auth secret`.
+- `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` — optional; leave blank to hide the Google sign-in button.
+- `CLOUDINARY_*` / `NEXT_PUBLIC_CLOUDINARY_*` — from your Cloudinary dashboard.
+- `CELEBRANT_EMAIL` / `CELEBRANT_PASSWORD` / `CELEBRANT_NAME` — used by the seed script to create the one celebrant account.
+
+### 3. Get a database
+
+Any PostgreSQL 14+ database works (Neon, Supabase, Railway, a local install, or Docker). For a quick local database with no extra install, Prisma can run one for you:
+
+```bash
+npx prisma dev
+```
+
+This prints a `DATABASE_URL` — copy it into `.env`.
+
+### 4. Push the schema and seed the celebrant account
+
+```bash
+npm run db:push
+npm run db:seed
+```
+
+`db:seed` creates (or promotes) the one `CELEBRANT` user from the `CELEBRANT_*` env vars — that's the account with access to `/dashboard`.
+
+For a production database, apply the committed migration instead of `db:push`:
+
+```bash
+npx prisma migrate deploy
+```
+
+### 5. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/` — routes (App Router)
+- `components/ui/` — shadcn/ui primitives
+- `lib/prisma.ts` — Prisma client singleton (uses the `pg` driver adapter, required by Prisma 7)
+- `prisma/schema.prisma` — data model
+- `prisma/seed.ts` — seeds the celebrant account and placeholder content
 
-## Learn More
+## Content placeholders
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Biography, achievement, and gallery content is seeded as clearly-marked placeholder text/images — replace it with real content via the seed script or directly in the database once the celebrant's story is ready.
