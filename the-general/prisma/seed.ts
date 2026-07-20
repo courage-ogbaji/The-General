@@ -97,6 +97,51 @@ async function main() {
     });
     console.log("Seeded placeholder achievements.");
   }
+
+  const galleryItemCount = await prisma.galleryItem.count();
+  if (galleryItemCount === 0) {
+    await prisma.galleryItem.createMany({
+      data: [
+        {
+          type: "IMAGE",
+          caption: "[Placeholder] Swap in a favorite photo and tell its story here.",
+          date: new Date("2019-06-01"),
+          orderIndex: 0,
+        },
+        {
+          type: "IMAGE",
+          caption: "[Placeholder] Another memory worth keeping.",
+          date: new Date("2020-11-12"),
+          orderIndex: 1,
+        },
+        {
+          type: "IMAGE",
+          caption: "[Placeholder] The one everyone always brings up.",
+          date: new Date("2022-02-14"),
+          orderIndex: 2,
+        },
+        {
+          type: "IMAGE",
+          caption: "[Placeholder] A quieter, still-favorite moment.",
+          date: new Date("2023-07-04"),
+          orderIndex: 3,
+        },
+        {
+          type: "IMAGE",
+          caption: "[Placeholder] One more for the gallery.",
+          date: new Date("2024-12-25"),
+          orderIndex: 4,
+        },
+        {
+          type: "IMAGE",
+          caption: "[Placeholder] The most recent one — for now.",
+          date: new Date("2025-08-30"),
+          orderIndex: 5,
+        },
+      ],
+    });
+    console.log("Seeded placeholder gallery items.");
+  }
 }
 
 main()
