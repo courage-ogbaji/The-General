@@ -30,7 +30,7 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
             <button
               type="button"
               onClick={() => setActive(item)}
-              className="block w-full overflow-hidden rounded-2xl border border-border/60 shadow-sm transition-transform hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="ease-fluid block w-full overflow-hidden rounded-2xl border border-border/60 shadow-sm transition-transform duration-500 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {item.mediaUrl ? (
                 item.type === "VIDEO" ? (
@@ -65,26 +65,28 @@ export function GalleryGrid({ items }: { items: GalleryItem[] }) {
         <DialogContent className="max-w-lg">
           {active && (
             <>
-              <div className="relative aspect-square w-full overflow-hidden rounded-xl">
-                {active.mediaUrl ? (
-                  active.type === "VIDEO" ? (
-                    <video
-                      src={active.mediaUrl}
-                      className="size-full object-cover"
-                      controls
-                    />
+              <div className="bezel-shell">
+                <div className="bezel-core relative aspect-square w-full overflow-hidden bg-card">
+                  {active.mediaUrl ? (
+                    active.type === "VIDEO" ? (
+                      <video
+                        src={active.mediaUrl}
+                        className="size-full object-cover"
+                        controls
+                      />
+                    ) : (
+                      <Image
+                        src={active.mediaUrl}
+                        alt={active.caption ?? ""}
+                        fill
+                        sizes="500px"
+                        className="object-cover"
+                      />
+                    )
                   ) : (
-                    <Image
-                      src={active.mediaUrl}
-                      alt={active.caption ?? ""}
-                      fill
-                      sizes="500px"
-                      className="object-cover"
-                    />
-                  )
-                ) : (
-                  <PlaceholderPhoto label="Photo placeholder" className="size-full" />
-                )}
+                    <PlaceholderPhoto label="Photo placeholder" className="size-full" />
+                  )}
+                </div>
               </div>
               <DialogHeader>
                 {active.date && (

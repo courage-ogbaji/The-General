@@ -38,11 +38,14 @@ export default async function WishesPage({
   ]);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mx-auto max-w-5xl px-4 py-24 sm:py-28">
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-heading text-3xl mb-1">Wall of Wishes</h1>
-          <p className="text-muted-foreground">
+          <span className="mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] font-medium tracking-[0.2em] text-primary uppercase">
+            Wall of Wishes
+          </span>
+          <h1 className="font-heading text-3xl sm:text-4xl">Every wish, for her</h1>
+          <p className="mt-1 text-muted-foreground">
             Every message, photo, and video from everyone who loves her.
           </p>
         </div>

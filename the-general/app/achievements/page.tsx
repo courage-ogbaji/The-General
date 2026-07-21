@@ -10,9 +10,11 @@ export default async function AchievementsPage() {
   });
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16">
-      <ScrollReveal className="mb-14 text-center">
-        <p className="mb-2 text-sm font-medium text-primary">Achievements</p>
+    <div className="mx-auto max-w-5xl px-4 py-24 sm:py-28">
+      <ScrollReveal className="mb-20 text-center">
+        <span className="mb-4 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] font-medium tracking-[0.2em] text-primary uppercase">
+          Achievements
+        </span>
         <h1 className="font-heading text-4xl sm:text-5xl">
           Everything she&apos;s built
         </h1>
@@ -33,40 +35,42 @@ export default async function AchievementsPage() {
               delay={(index % 3) * 0.1}
               className={index % 5 === 0 ? "sm:col-span-2" : undefined}
             >
-              <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm">
-                {achievement.mediaUrl ? (
-                  <div className="relative aspect-video w-full">
-                    <Image
-                      src={achievement.mediaUrl}
-                      alt={achievement.title}
-                      fill
-                      sizes="(min-width: 1024px) 380px, 90vw"
-                      className="object-cover"
+              <div className="bezel-shell h-full transition-transform duration-500 ease-fluid hover:-translate-y-1">
+                <div className="bezel-core flex h-full flex-col overflow-hidden bg-card">
+                  {achievement.mediaUrl ? (
+                    <div className="relative aspect-video w-full">
+                      <Image
+                        src={achievement.mediaUrl}
+                        alt={achievement.title}
+                        fill
+                        sizes="(min-width: 1024px) 380px, 90vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <PlaceholderPhoto
+                      label="Photo/video placeholder"
+                      variant={index}
+                      className="aspect-video w-full"
                     />
+                  )}
+                  <div className="flex flex-1 flex-col gap-2 p-5">
+                    <div className="flex items-center gap-2 text-primary">
+                      <Award className="size-4" />
+                      {achievement.date && (
+                        <span className="text-xs font-medium tracking-wide uppercase">
+                          {new Date(achievement.date).toLocaleDateString(undefined, {
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                      )}
+                    </div>
+                    <h2 className="font-heading text-xl">{achievement.title}</h2>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {achievement.description}
+                    </p>
                   </div>
-                ) : (
-                  <PlaceholderPhoto
-                    label="Photo/video placeholder"
-                    variant={index}
-                    className="aspect-video w-full"
-                  />
-                )}
-                <div className="flex flex-1 flex-col gap-2 p-5">
-                  <div className="flex items-center gap-2 text-primary">
-                    <Award className="size-4" />
-                    {achievement.date && (
-                      <span className="text-xs font-medium tracking-wide uppercase">
-                        {new Date(achievement.date).toLocaleDateString(undefined, {
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </span>
-                    )}
-                  </div>
-                  <h2 className="font-heading text-xl">{achievement.title}</h2>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {achievement.description}
-                  </p>
                 </div>
               </div>
             </ScrollReveal>
