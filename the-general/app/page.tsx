@@ -1,11 +1,55 @@
 import Link from "next/link";
-import { Sparkles, Heart, PartyPopper } from "lucide-react";
+import {
+  Sparkles,
+  Heart,
+  PartyPopper,
+  BookOpen,
+  Award,
+  Images,
+  MessageCircleHeart,
+} from "lucide-react";
 import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { PlaceholderPhoto } from "@/components/placeholder-photo";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { cn } from "@/lib/utils";
 
 const CELEBRANT_NAME = "[Celebrant's Name]";
+
+const exploreItems = [
+  {
+    href: "/biography",
+    label: "Her Story",
+    desc: "Where it all began",
+    icon: BookOpen,
+    badge: "bg-jewel-plum/15 text-jewel-plum group-hover:bg-jewel-plum",
+    span: "lg:col-span-2 lg:row-span-2",
+  },
+  {
+    href: "/achievements",
+    label: "Achievements",
+    desc: "Everything she's built",
+    icon: Award,
+    badge: "bg-jewel-gold/15 text-jewel-gold group-hover:bg-jewel-gold",
+    span: "",
+  },
+  {
+    href: "/gallery",
+    label: "Gallery",
+    desc: "Photos and memories",
+    icon: Images,
+    badge: "bg-jewel-teal/15 text-jewel-teal group-hover:bg-jewel-teal",
+    span: "",
+  },
+  {
+    href: "/wishes",
+    label: "Wall of Wishes",
+    desc: "What everyone's saying",
+    icon: MessageCircleHeart,
+    badge: "bg-jewel-rose/15 text-jewel-rose group-hover:bg-jewel-rose",
+    span: "lg:col-span-2",
+  },
+];
 
 const collageTiles = [
   {
@@ -59,6 +103,7 @@ export default async function HomePage() {
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden px-4 pt-14 pb-20 sm:pt-20 sm:pb-28">
+        <div className="bg-warm-glow pointer-events-none absolute inset-0 -z-10" />
         <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-2">
           <ScrollReveal>
             <p className="mb-3 flex items-center gap-1.5 text-sm font-medium text-primary">
@@ -143,27 +188,40 @@ export default async function HomePage() {
       </section>
 
       {/* Explore */}
-      <section className="border-t border-border/60 bg-muted/40 px-4 py-16">
-        <div className="mx-auto max-w-5xl">
-          <ScrollReveal className="mb-8 text-center">
+      <section className="bg-confetti-dots relative border-t border-border/60 px-4 py-16">
+        <div className="absolute inset-0 bg-muted/50" />
+        <div className="relative mx-auto max-w-5xl">
+          <ScrollReveal className="mb-10 text-center">
             <h2 className="font-heading text-3xl">Explore</h2>
           </ScrollReveal>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { href: "/biography", label: "Her Story", desc: "Where it all began" },
-              { href: "/achievements", label: "Achievements", desc: "Everything she's built" },
-              { href: "/gallery", label: "Gallery", desc: "Photos and memories" },
-              { href: "/wishes", label: "Wall of Wishes", desc: "What everyone's saying" },
-            ].map((item, index) => (
-              <ScrollReveal key={item.href} delay={index * 0.08}>
+            {exploreItems.map((item, index) => (
+              <ScrollReveal
+                key={item.href}
+                delay={index * 0.08}
+                className={item.span}
+              >
                 <Link
                   href={item.href}
-                  className="block rounded-2xl border border-border/60 bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md"
+                  className={cn(
+                    "group flex h-full flex-col justify-between gap-6 rounded-2xl border border-border/60 bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg",
+                    index === 0 && "sm:p-8"
+                  )}
                 >
-                  <h3 className="font-heading text-xl">{item.label}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {item.desc}
-                  </p>
+                  <span
+                    className={cn(
+                      "flex size-11 items-center justify-center rounded-full transition-colors group-hover:text-white",
+                      item.badge
+                    )}
+                  >
+                    <item.icon className="size-5" strokeWidth={1.75} />
+                  </span>
+                  <div>
+                    <h3 className="font-heading text-xl">{item.label}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {item.desc}
+                    </p>
+                  </div>
                 </Link>
               </ScrollReveal>
             ))}

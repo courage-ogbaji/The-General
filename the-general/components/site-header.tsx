@@ -50,7 +50,7 @@ export function SiteHeader({ user }: { user: NavUser }) {
     .toUpperCase();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="from-jewel-rose/8 via-background/90 to-jewel-gold/8 sticky top-0 z-50 border-b border-border/60 bg-gradient-to-r backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link
           href="/"
