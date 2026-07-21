@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
+import { LucideProvider } from "lucide-react";
 import { auth } from "@/auth";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PageTransition } from "@/components/page-transition";
+import { GrainOverlay } from "@/components/grain-overlay";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -12,7 +14,7 @@ const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
 });
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -40,13 +42,16 @@ export default async function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${playfairDisplay.variable} ${inter.variable} h-full antialiased`}
+      className={`${playfairDisplay.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <SiteHeader user={navUser} />
-        <PageTransition>{children}</PageTransition>
-        <SiteFooter />
-        <Toaster position="bottom-center" />
+        <LucideProvider strokeWidth={1.5}>
+          <GrainOverlay />
+          <SiteHeader user={navUser} />
+          <PageTransition>{children}</PageTransition>
+          <SiteFooter />
+          <Toaster position="bottom-center" />
+        </LucideProvider>
       </body>
     </html>
   );

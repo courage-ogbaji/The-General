@@ -51,6 +51,7 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 :root {
@@ -181,5 +182,20 @@
       0 0,
       21px 32px,
       10px 48px;
+  }
+
+  /* Double-bezel: nests an inner content pane inside a slightly larger,
+     tinted outer shell — reads as machined hardware rather than a flat
+     image sitting on the page. Pair `.bezel-shell` (wrapper) with
+     `.bezel-core` (inner content, e.g. the actual photo/frame). */
+  .bezel-shell {
+    background: color-mix(in oklch, var(--foreground) 4%, transparent);
+    box-shadow: inset 0 1px 1px oklch(1 0 0 / 12%);
+    padding: 0.375rem;
+    border-radius: 1.75rem;
+  }
+  .bezel-core {
+    border-radius: calc(1.75rem - 0.375rem);
+    box-shadow: inset 0 1px 1px oklch(1 0 0 / 25%);
   }
 }

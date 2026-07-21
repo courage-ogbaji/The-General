@@ -9,7 +9,7 @@ import {
   MessageCircleHeart,
 } from "lucide-react";
 import { auth } from "@/auth";
-import { Button } from "@/components/ui/button";
+import { IslandCTA } from "@/components/island-cta";
 import { PlaceholderPhoto } from "@/components/placeholder-photo";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { cn } from "@/lib/utils";
@@ -102,14 +102,14 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden px-4 pt-14 pb-20 sm:pt-20 sm:pb-28">
+      <section className="relative overflow-hidden px-4 pt-20 pb-24 sm:pt-28 sm:pb-32">
         <div className="bg-warm-glow pointer-events-none absolute inset-0 -z-10" />
         <div className="mx-auto grid max-w-5xl items-center gap-10 md:grid-cols-2">
           <ScrollReveal>
-            <p className="mb-3 flex items-center gap-1.5 text-sm font-medium text-primary">
-              <PartyPopper className="size-4" />
+            <span className="mb-5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-medium tracking-[0.2em] text-primary uppercase">
+              <PartyPopper className="size-3" />
               It&apos;s her birthday
-            </p>
+            </span>
             <h1 className="font-heading text-4xl leading-tight sm:text-5xl md:text-6xl">
               Celebrating {CELEBRANT_NAME}
             </h1>
@@ -117,24 +117,15 @@ export default async function HomePage() {
               A little corner of the internet where everyone who loves her
               gets to say so — in photos, videos, and words.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap items-center gap-3">
               {session?.user ? (
-                <Button render={<Link href="/wishes/new" />} nativeButton={false} size="lg">
-                  Leave your wish
-                </Button>
+                <IslandCTA href="/wishes/new">Leave your wish</IslandCTA>
               ) : (
-                <Button render={<Link href="/signup" />} nativeButton={false} size="lg">
-                  Sign up to leave your wish
-                </Button>
+                <IslandCTA href="/signup">Sign up to leave your wish</IslandCTA>
               )}
-              <Button
-                render={<Link href="/wishes" />}
-                nativeButton={false}
-                variant="outline"
-                size="lg"
-              >
+              <IslandCTA href="/wishes" variant="outline">
                 See her wishes
-              </Button>
+              </IslandCTA>
             </div>
           </ScrollReveal>
 
@@ -151,7 +142,7 @@ export default async function HomePage() {
       </section>
 
       {/* Scrapbook collage */}
-      <section className="px-4 pb-24">
+      <section className="px-4 pb-32">
         <div className="mx-auto max-w-5xl">
           <ScrollReveal className="mb-10 text-center">
             <h2 className="font-heading text-3xl">A few reasons why</h2>
@@ -194,7 +185,7 @@ export default async function HomePage() {
           <ScrollReveal className="mb-10 text-center">
             <h2 className="font-heading text-3xl">Explore</h2>
           </ScrollReveal>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {exploreItems.map((item, index) => (
               <ScrollReveal
                 key={item.href}
@@ -203,24 +194,28 @@ export default async function HomePage() {
               >
                 <Link
                   href={item.href}
-                  className={cn(
-                    "group flex h-full flex-col justify-between gap-6 rounded-2xl border border-border/60 bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg",
-                    index === 0 && "sm:p-8"
-                  )}
+                  className="bezel-shell group block h-full transition-all duration-500 ease-fluid hover:-translate-y-1"
                 >
-                  <span
+                  <div
                     className={cn(
-                      "flex size-11 items-center justify-center rounded-full transition-colors group-hover:text-white",
-                      item.badge
+                      "bezel-core flex h-full flex-col justify-between gap-6 bg-card p-6 transition-shadow group-hover:shadow-lg",
+                      index === 0 && "sm:p-8"
                     )}
                   >
-                    <item.icon className="size-5" strokeWidth={1.75} />
-                  </span>
-                  <div>
-                    <h3 className="font-heading text-xl">{item.label}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {item.desc}
-                    </p>
+                    <span
+                      className={cn(
+                        "flex size-11 items-center justify-center rounded-full transition-colors group-hover:text-white",
+                        item.badge
+                      )}
+                    >
+                      <item.icon className="size-5" />
+                    </span>
+                    <div>
+                      <h3 className="font-heading text-xl">{item.label}</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {item.desc}
+                      </p>
+                    </div>
                   </div>
                 </Link>
               </ScrollReveal>
