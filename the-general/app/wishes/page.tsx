@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { WisherFilter } from "./wisher-filter";
 import { WishCard } from "./wish-card";
@@ -8,11 +9,25 @@ export default async function WishesPage({
   searchParams: Promise<{ author?: string }>;
 }) {
   const { author } = await searchParams;
+  const session = await auth();
+  const currentUser = session?.user
+    ? { id: session.user.id, role: session.user.role }
+    : null;
 
   const [wishes, wishers] = await Promise.all([
     prisma.wish.findMany({
       where: author ? { authorId: author } : undefined,
-      include: { author: true },
+      include: {
+        author: true,
+        comments: {
+          include: {
+            author: {
+              select: { id: true, displayName: true, profilePhotoUrl: true },
+            },
+          },
+          orderBy: { createdAt: "asc" },
+        },
+      },
       orderBy: { createdAt: "desc" },
     }),
     prisma.user.findMany({
@@ -41,7 +56,7 @@ export default async function WishesPage({
       ) : (
         <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">
           {wishes.map((wish) => (
-            <WishCard key={wish.id} wish={wish} />
+            <WishCard key={wish.id} wish={wish} currentUser={currentUser} />
           ))}
         </div>
       )}

@@ -5,9 +5,18 @@ import Image from "next/image";
 import { Eye, EyeOff, Heart, PlayCircle } from "lucide-react";
 import { toggleSeenAction, toggleFavoriteAction } from "./actions";
 import { Button } from "@/components/ui/button";
+import { WishComments, type CommentWithAuthor } from "@/components/wish-comments";
 import type { Wish } from "@/lib/generated/prisma/client";
 
-export function WishItem({ wish }: { wish: Wish }) {
+type WishWithComments = Wish & { comments: CommentWithAuthor[] };
+
+export function WishItem({
+  wish,
+  currentUser,
+}: {
+  wish: WishWithComments;
+  currentUser: { id: string; role: "WISHER" | "CELEBRANT" } | null;
+}) {
   const [isPending, startTransition] = useTransition();
   const seen = Boolean(wish.seenAt);
 
@@ -79,6 +88,12 @@ export function WishItem({ wish }: { wish: Wish }) {
             </Button>
           </div>
         </div>
+
+        <WishComments
+          wishId={wish.id}
+          initialComments={wish.comments}
+          currentUser={currentUser}
+        />
       </div>
     </div>
   );

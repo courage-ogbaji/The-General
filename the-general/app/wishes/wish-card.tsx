@@ -1,11 +1,18 @@
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PlayCircle } from "lucide-react";
+import { Heart, PlayCircle } from "lucide-react";
+import { WishComments, type CommentWithAuthor } from "@/components/wish-comments";
 import type { Wish, User } from "@/lib/generated/prisma/client";
 
-type WishWithAuthor = Wish & { author: User };
+type WishWithAuthor = Wish & { author: User; comments: CommentWithAuthor[] };
 
-export function WishCard({ wish }: { wish: WishWithAuthor }) {
+export function WishCard({
+  wish,
+  currentUser,
+}: {
+  wish: WishWithAuthor;
+  currentUser: { id: string; role: "WISHER" | "CELEBRANT" } | null;
+}) {
   const primaryMedia = wish.mediaUrls[0];
   const extraCount = wish.mediaUrls.length - 1;
   const isVideo = wish.type === "VIDEO" || (wish.type === "MIXED" && primaryMedia?.match(/\.(mp4|mov|webm)$/i));
@@ -43,7 +50,13 @@ export function WishCard({ wish }: { wish: WishWithAuthor }) {
           )}
         </div>
       )}
-      <div className="space-y-2 p-4">
+      <div className="space-y-3 p-4">
+        {wish.favorite && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-jewel-rose/10 px-2 py-0.5 text-xs font-medium text-jewel-rose">
+            <Heart className="size-3 fill-jewel-rose text-jewel-rose" />
+            She loved this
+          </span>
+        )}
         {wish.caption && (
           <p className="text-sm text-foreground">{wish.caption}</p>
         )}
@@ -65,6 +78,12 @@ export function WishCard({ wish }: { wish: WishWithAuthor }) {
             })}
           </span>
         </div>
+
+        <WishComments
+          wishId={wish.id}
+          initialComments={wish.comments}
+          currentUser={currentUser}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -12,10 +13,28 @@ export default async function WisherDetailPage({
   params: Promise<{ wisherId: string }>;
 }) {
   const { wisherId } = await params;
+  const session = await auth();
+  const currentUser = session?.user
+    ? { id: session.user.id, role: session.user.role }
+    : null;
 
   const wisher = await prisma.user.findUnique({
     where: { id: wisherId },
-    include: { wishes: { orderBy: { createdAt: "desc" } } },
+    include: {
+      wishes: {
+        include: {
+          comments: {
+            include: {
+              author: {
+                select: { id: true, displayName: true, profilePhotoUrl: true },
+              },
+            },
+            orderBy: { createdAt: "asc" },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
   });
 
   if (!wisher || wisher.role !== "WISHER") {
@@ -65,7 +84,7 @@ export default async function WisherDetailPage({
         <div className="grid gap-4 sm:grid-cols-2">
           {wisher.wishes.map((wish, index) => (
             <ScrollReveal key={wish.id} delay={(index % 4) * 0.06}>
-              <WishItem wish={wish} />
+              <WishItem wish={wish} currentUser={currentUser} />
             </ScrollReveal>
           ))}
         </div>

@@ -20,6 +20,16 @@ export default async function ProfilePage() {
 
   const wishes = await prisma.wish.findMany({
     where: { authorId: user.id },
+    include: {
+      comments: {
+        include: {
+          author: {
+            select: { id: true, displayName: true, profilePhotoUrl: true },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 
@@ -38,7 +48,10 @@ export default async function ProfilePage() {
 
       <div className="mt-12">
         <h2 className="font-heading text-2xl mb-4">Your wishes</h2>
-        <WishList wishes={wishes} />
+        <WishList
+          wishes={wishes}
+          currentUser={{ id: user.id, role: user.role }}
+        />
       </div>
     </div>
   );
