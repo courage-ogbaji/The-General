@@ -28,3 +28,14 @@ export async function toggleFavoriteAction(wishId: string, favorite: boolean) {
   });
   revalidatePath("/dashboard");
 }
+
+export async function togglePublishAction(wishId: string, published: boolean) {
+  await requireCelebrant();
+  await prisma.wish.update({
+    where: { id: wishId },
+    data: { published },
+  });
+  revalidatePath("/dashboard");
+  revalidatePath("/wishes");
+  revalidatePath("/profile");
+}

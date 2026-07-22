@@ -16,7 +16,10 @@ export default async function WishesPage({
 
   const [wishes, wishers] = await Promise.all([
     prisma.wish.findMany({
-      where: author ? { authorId: author } : undefined,
+      where: {
+        published: true,
+        ...(author ? { authorId: author } : {}),
+      },
       include: {
         author: true,
         comments: {
@@ -27,11 +30,12 @@ export default async function WishesPage({
           },
           orderBy: { createdAt: "asc" },
         },
+        likes: { select: { userId: true } },
       },
       orderBy: { createdAt: "desc" },
     }),
     prisma.user.findMany({
-      where: { wishes: { some: {} } },
+      where: { wishes: { some: { published: true } } },
       select: { id: true, displayName: true },
       orderBy: { displayName: "asc" },
     }),
@@ -54,7 +58,8 @@ export default async function WishesPage({
 
       {wishes.length === 0 ? (
         <p className="text-muted-foreground text-sm">
-          No wishes {author ? "from this wisher " : ""}yet — be the first.
+          No published wishes {author ? "from this wisher " : ""}yet — check
+          back soon.
         </p>
       ) : (
         <div className="columns-1 gap-4 sm:columns-2 lg:columns-3">

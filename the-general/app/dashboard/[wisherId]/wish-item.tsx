@@ -2,8 +2,12 @@
 
 import { useTransition } from "react";
 import Image from "next/image";
-import { Eye, EyeOff, Heart, PlayCircle } from "lucide-react";
-import { toggleSeenAction, toggleFavoriteAction } from "./actions";
+import { Eye, EyeOff, Heart, Megaphone, PlayCircle } from "lucide-react";
+import {
+  toggleSeenAction,
+  toggleFavoriteAction,
+  togglePublishAction,
+} from "./actions";
 import { Button } from "@/components/ui/button";
 import { WishComments, type CommentWithAuthor } from "@/components/wish-comments";
 import type { Wish } from "@/lib/generated/prisma/client";
@@ -48,8 +52,14 @@ export function WishItem({
         </div>
       )}
       <div className="space-y-3 p-4">
+        {wish.published && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-jewel-teal/10 px-2 py-0.5 text-xs font-medium text-jewel-teal">
+            <Megaphone className="size-3" />
+            On the wall
+          </span>
+        )}
         {wish.caption && <p className="text-sm text-foreground">{wish.caption}</p>}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <span className="text-xs text-muted-foreground">
             {new Date(wish.createdAt).toLocaleDateString(undefined, {
               month: "short",
@@ -57,7 +67,7 @@ export function WishItem({
               year: "numeric",
             })}
           </span>
-          <div className="flex gap-1">
+          <div className="flex items-center gap-1">
             <Button
               type="button"
               variant="ghost"
@@ -85,6 +95,20 @@ export function WishItem({
               <Heart
                 className={`size-4 ${wish.favorite ? "fill-primary text-primary" : ""}`}
               />
+            </Button>
+            <Button
+              type="button"
+              variant={wish.published ? "secondary" : "outline"}
+              size="sm"
+              disabled={isPending}
+              onClick={() =>
+                startTransition(() =>
+                  togglePublishAction(wish.id, !wish.published)
+                )
+              }
+            >
+              <Megaphone className="size-3.5" />
+              {wish.published ? "Remove from wall" : "Publish"}
             </Button>
           </div>
         </div>

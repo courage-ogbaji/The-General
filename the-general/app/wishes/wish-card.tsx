@@ -2,9 +2,14 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, PlayCircle } from "lucide-react";
 import { WishComments, type CommentWithAuthor } from "@/components/wish-comments";
+import { WishLikeButton } from "@/components/wish-like-button";
 import type { Wish, User } from "@/lib/generated/prisma/client";
 
-type WishWithAuthor = Wish & { author: User; comments: CommentWithAuthor[] };
+type WishWithAuthor = Wish & {
+  author: User;
+  comments: CommentWithAuthor[];
+  likes: { userId: string }[];
+};
 
 export function WishCard({
   wish,
@@ -78,6 +83,15 @@ export function WishCard({
             })}
           </span>
         </div>
+
+        <WishLikeButton
+          wishId={wish.id}
+          initialLiked={Boolean(
+            currentUser && wish.likes.some((l) => l.userId === currentUser.id)
+          )}
+          initialCount={wish.likes.length}
+          disabled={!currentUser}
+        />
 
         <WishComments
           wishId={wish.id}

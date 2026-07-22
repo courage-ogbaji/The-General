@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import Image from "next/image";
-import { Heart, Trash2 } from "lucide-react";
+import { Heart, Megaphone, Trash2 } from "lucide-react";
 import { deleteWishAction } from "./actions";
 import { Button } from "@/components/ui/button";
 import { WishComments, type CommentWithAuthor } from "@/components/wish-comments";
@@ -60,12 +60,24 @@ function WishRow({
           </div>
         )}
         <div className="min-w-0 flex-1">
-          {wish.favorite && (
-            <span className="mb-1 inline-flex items-center gap-1 rounded-full bg-jewel-rose/10 px-2 py-0.5 text-xs font-medium text-jewel-rose">
-              <Heart className="size-3 fill-jewel-rose text-jewel-rose" />
-              She loved this
+          <div className="mb-1 flex flex-wrap gap-1.5">
+            {wish.favorite && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-jewel-rose/10 px-2 py-0.5 text-xs font-medium text-jewel-rose">
+                <Heart className="size-3 fill-jewel-rose text-jewel-rose" />
+                She loved this
+              </span>
+            )}
+            <span
+              className={
+                wish.published
+                  ? "inline-flex items-center gap-1 rounded-full bg-jewel-teal/10 px-2 py-0.5 text-xs font-medium text-jewel-teal"
+                  : "inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+              }
+            >
+              <Megaphone className="size-3" />
+              {wish.published ? "On the wall" : "Only she can see this"}
             </span>
-          )}
+          </div>
           {wish.caption && (
             <p className="line-clamp-2 text-sm text-foreground">{wish.caption}</p>
           )}

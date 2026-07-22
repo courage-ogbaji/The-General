@@ -40,26 +40,43 @@ model User {
 
   wishes   Wish[]
   comments Comment[]
+  likes    Like[]
 
   @@index([role])
 }
 
 model Wish {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   authorId  String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   type      WishType
-  mediaUrls String[] @default([])
+  mediaUrls String[]  @default([])
   caption   String?
   seenAt    DateTime?
-  favorite  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  favorite  Boolean   @default(false)
+  published Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   comments Comment[]
+  likes    Like[]
 
   @@index([authorId])
   @@index([createdAt])
+  @@index([published])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  wishId    String
+  wish      Wish     @relation(fields: [wishId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([wishId, userId])
+  @@index([wishId])
+  @@index([userId])
 }
 
 model Comment {

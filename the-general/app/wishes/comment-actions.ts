@@ -51,10 +51,18 @@ export async function createCommentAction(
 
   const wish = await prisma.wish.findUnique({
     where: { id: wishId },
-    select: { id: true },
+    select: { id: true, authorId: true, published: true },
   });
   if (!wish) {
     return { error: "This wish no longer exists." };
+  }
+
+  const canComment =
+    wish.published ||
+    wish.authorId === session.user.id ||
+    session.user.role === "CELEBRANT";
+  if (!canComment) {
+    return { error: "This wish isn't on the wall yet." };
   }
 
   const comment = await prisma.comment.create({
