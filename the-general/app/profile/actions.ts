@@ -20,6 +20,8 @@ export async function updateProfileAction(
   const parsed = profileSchema.safeParse({
     displayName: formData.get("displayName"),
     bio: formData.get("bio") || undefined,
+    location: formData.get("location") || undefined,
+    phone: formData.get("phone") || undefined,
     profilePhotoUrl: formData.get("profilePhotoUrl") || undefined,
   });
 
@@ -29,12 +31,18 @@ export async function updateProfileAction(
 
   const displayName = sanitizePlainText(parsed.data.displayName);
   const bio = parsed.data.bio ? sanitizePlainText(parsed.data.bio) : null;
+  const location = parsed.data.location
+    ? sanitizePlainText(parsed.data.location)
+    : null;
+  const phone = parsed.data.phone ? sanitizePlainText(parsed.data.phone) : null;
 
   await prisma.user.update({
     where: { id: session.user.id },
     data: {
       displayName,
       bio,
+      location,
+      phone,
       ...(parsed.data.profilePhotoUrl
         ? { profilePhotoUrl: parsed.data.profilePhotoUrl }
         : {}),
@@ -42,6 +50,8 @@ export async function updateProfileAction(
   });
 
   revalidatePath("/profile");
+  revalidatePath("/profile/edit");
+  revalidatePath("/dashboard", "layout");
   return { success: true };
 }
 

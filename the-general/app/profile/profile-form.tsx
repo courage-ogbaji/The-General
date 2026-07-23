@@ -12,10 +12,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export function ProfileForm({
   displayName,
   bio,
+  location,
+  phone,
   profilePhotoUrl,
 }: {
   displayName: string;
   bio: string;
+  location: string;
+  phone: string;
   profilePhotoUrl: string | null;
 }) {
   const [state, formAction, isPending] = useActionState<ProfileState, FormData>(
@@ -82,14 +86,38 @@ export function ProfileForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="bio">Relationship to her (optional)</Label>
+        <Label htmlFor="bio">About you (optional)</Label>
         <Textarea
           id="bio"
           name="bio"
           maxLength={280}
           defaultValue={bio}
-          placeholder="College roommate, cousin, coworker..."
+          placeholder="How you know her, or anything you'd like her to see..."
         />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="location">Location (optional)</Label>
+          <Input
+            id="location"
+            name="location"
+            maxLength={100}
+            defaultValue={location}
+            placeholder="Lagos, Nigeria"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="phone">Phone number (optional)</Label>
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            maxLength={30}
+            defaultValue={phone}
+            placeholder="+234 800 000 0000"
+          />
+        </div>
       </div>
 
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}

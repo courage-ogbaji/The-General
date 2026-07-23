@@ -1,7 +1,10 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Pencil } from "lucide-react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { ProfileForm } from "./profile-form";
+import { Button } from "@/components/ui/button";
+import { WisherProfileHeader } from "@/components/wisher-profile-header";
 import { WishList } from "./wish-list";
 
 export default async function ProfilePage() {
@@ -34,20 +37,23 @@ export default async function ProfilePage() {
   });
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12">
-      <h1 className="font-heading text-3xl mb-1">Your profile</h1>
-      <p className="text-muted-foreground mb-8">
-        Update how you appear to her and everyone else.
-      </p>
-
-      <ProfileForm
+    <div className="mx-auto max-w-2xl px-4 py-24 sm:py-28">
+      <WisherProfileHeader
         displayName={user.displayName}
-        bio={user.bio ?? ""}
         profilePhotoUrl={user.profilePhotoUrl}
+        bio={user.bio}
+        location={user.location}
+        phone={user.phone}
+        action={
+          <Button render={<Link href="/profile/edit" />} nativeButton={false} variant="outline">
+            <Pencil className="size-4" />
+            Edit profile
+          </Button>
+        }
       />
 
-      <div className="mt-12">
-        <h2 className="font-heading text-2xl mb-4">Your wishes</h2>
+      <div>
+        <h2 className="font-heading mb-4 text-2xl">Your wishes</h2>
         <WishList
           wishes={wishes}
           currentUser={{ id: user.id, role: user.role }}

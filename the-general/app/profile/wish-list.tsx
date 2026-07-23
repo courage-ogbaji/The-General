@@ -1,11 +1,10 @@
 "use client";
 
-import { useTransition } from "react";
 import Image from "next/image";
-import { Heart, Megaphone, Trash2 } from "lucide-react";
+import { Heart, Megaphone } from "lucide-react";
 import { deleteWishAction } from "./actions";
-import { Button } from "@/components/ui/button";
 import { WishComments, type CommentWithAuthor } from "@/components/wish-comments";
+import { WishKebabMenu } from "@/components/wish-kebab-menu";
 import type { Wish } from "@/lib/generated/prisma/client";
 
 type WishWithComments = Wish & { comments: CommentWithAuthor[] };
@@ -27,7 +26,7 @@ export function WishList({
   }
 
   return (
-    <ul className="space-y-3">
+    <ul className="space-y-4">
       {wishes.map((wish) => (
         <WishRow key={wish.id} wish={wish} currentUser={currentUser} />
       ))}
@@ -42,25 +41,24 @@ function WishRow({
   wish: WishWithComments;
   currentUser: CurrentUser;
 }) {
-  const [isPending, startTransition] = useTransition();
   const thumbnail = wish.mediaUrls[0];
 
   return (
-    <li className="space-y-3 rounded-lg border border-border/60 bg-card p-3">
-      <div className="flex items-start gap-3">
+    <li className="space-y-3 rounded-2xl border border-border/60 bg-card p-4">
+      <div className="flex items-start gap-4">
         {thumbnail && (
-          <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted">
+          <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-muted">
             <Image
               src={thumbnail}
               alt=""
               fill
-              sizes="56px"
+              sizes="64px"
               className="object-cover"
             />
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <div className="mb-1 flex flex-wrap gap-1.5">
+          <div className="mb-1.5 flex flex-wrap gap-1.5">
             {wish.favorite && (
               <span className="inline-flex items-center gap-1 rounded-full bg-jewel-rose/10 px-2 py-0.5 text-xs font-medium text-jewel-rose">
                 <Heart className="size-3 fill-jewel-rose text-jewel-rose" />
@@ -89,16 +87,10 @@ function WishRow({
             })}
           </p>
         </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          disabled={isPending}
-          aria-label="Delete wish"
-          onClick={() => startTransition(() => deleteWishAction(wish.id))}
-        >
-          <Trash2 className="size-4" />
-        </Button>
+        <WishKebabMenu
+          wishId={wish.id}
+          onDelete={() => deleteWishAction(wish.id)}
+        />
       </div>
 
       <WishComments

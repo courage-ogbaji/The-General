@@ -23,13 +23,15 @@ A birthday celebration web app. Friends and loved ones ("wishers") create accoun
 | `/biography` | Chapter-style story, alternating image/text | Public |
 | `/achievements` | Card-grid of milestones | Public |
 | `/gallery` | Masonry photo/video grid with lightbox | Public |
-| `/wishes` | Public wall of wishes, filterable by wisher | Public |
-| `/wishes/new` | Post a wish (photos/video + message) | Logged in |
+| `/wishes` | Wall of **published** wishes only, filterable by wisher, with likes + comments | Public |
+| `/wishes/new` | Post a wish (photos/video + message) — starts unpublished/private | Logged in |
+| `/wishes/[wishId]/edit` | Edit your own wish (caption/media) | Wish author only |
 | `/signup`, `/login` | Account creation and sign-in (credentials + optional Google) | Public |
-| `/profile` | Edit your name/photo/bio, manage your own wishes | Logged in |
+| `/profile` | Your beautiful profile — photo, about, location, phone, and your wishes (kebab menu: edit/delete) | Logged in |
+| `/profile/edit` | Edit your name/photo/about/location/phone | Logged in |
 | `/gift` | Bank/crypto/delivery details, copy-to-clipboard, `noindex` | Logged in |
 | `/dashboard` | Stats + searchable wisher list | Celebrant only |
-| `/dashboard/[wisherId]` | One wisher's wishes, with seen/favorite toggles | Celebrant only |
+| `/dashboard/[wisherId]` | One wisher's full profile + wishes, with seen/favorite/**publish-to-wall** toggles | Celebrant only |
 
 ## Getting started
 
@@ -50,7 +52,7 @@ cp .env.example .env
 - `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` — optional. Create an OAuth client in the [Google Cloud Console](https://console.cloud.google.com/apis/credentials) with authorized redirect URI `{your origin}/api/auth/callback/google`. Leave blank to hide the Google sign-in button entirely.
 - `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` — from your Cloudinary dashboard (not currently used server-side, but documented for future signed-upload use).
 - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` — your Cloudinary cloud name, exposed to the browser.
-- `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` — an **unsigned** upload preset (Cloudinary dashboard → Settings → Upload → Upload presets → Add upload preset → Signing Mode: Unsigned). Required for the photo/video upload widgets on `/signup`, `/profile`, and `/wishes/new` — without it, those upload buttons simply don't render (the rest of each form still works).
+- `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` — an **unsigned** upload preset (Cloudinary dashboard → Settings → Upload → Upload presets → Add upload preset → Signing Mode: Unsigned). Required for the photo/video upload widgets on `/signup`, `/profile/edit`, `/wishes/new`, and `/wishes/[wishId]/edit` — without it, those upload buttons simply don't render (the rest of each form still works).
 - `CELEBRANT_EMAIL` / `CELEBRANT_PASSWORD` / `CELEBRANT_NAME` — used by the seed script to create the one celebrant account.
 
 ### 3. Get a database

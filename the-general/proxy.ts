@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 const CELEBRANT_ONLY_PREFIXES = ["/dashboard"];
-const LOGIN_REQUIRED_PREFIXES = ["/gift", "/wishes/new"];
+const LOGIN_REQUIRED_PREFIXES = ["/gift", "/wishes/new", "/wishes/", "/profile"];
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
@@ -33,5 +33,13 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/gift", "/gift/:path*", "/wishes/new"],
+  matcher: [
+    "/dashboard/:path*",
+    "/gift",
+    "/gift/:path*",
+    "/wishes/new",
+    "/wishes/:id/edit",
+    "/profile",
+    "/profile/:path*",
+  ],
 };
